@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<!--
+
+Page    : index / MobApp
+Version : 1.0
+Author  : Colorlib
+URI     : https://colorlib.com
+
+ -->
+
+<head>
+    <title>Diabetes Diagnostics</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Mobland - Mobile App Landing Page Template">
+    <meta name="keywords" content="HTML5, bootstrap, mobile, app, landing, ios, android, responsive">
+
+    <!-- Font -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <!-- Owl carousel -->
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <!-- Main css -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body data-spy="scroll" data-target="#navbar" data-offset="30">
+
+    <!-- Nav Menu -->
+
+    <div class="nav-menu fixed-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-dark navbar-expand-lg">
+                        <a class="navbar-brand" href="{{url_for('home_page', type = 'refresh') }}"><img src="images/logo.png" class="img-fluid" alt="logo" width="300" height="150"></a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                        <div class="collapse navbar-collapse" id="navbar">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item"> <a class="nav-link active" href="#home">HOME <span class="sr-only">(current)</span></a> </li>
+                                <li class="nav-item"> <a class="nav-link" href="#features">DIAGNOSIS</a> </li>
+                                <li class="nav-item"><a href="{{ url_for('logout', type='sign out') }}" class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Signout</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <header class="bg-gradient" id="home">
+        <div class="container mt-5" style="padding-top: 50px;">
+            <h1>Diabetic Risk Prediction</h1>
+            <p style="color: white; padding-bottom: 70px;" class="tagline">Please confirm your data below for our Artificial intelligence enabled system to run a diagnosis on your health status</p>
+        </div>
+        <!-- <div class="img-holder mt-3"><img src="images/sphygmomanometer.png" alt="phone" class="img-fluid"></div> -->
+    </header>
+
+    <!-- <div class="client-logos my-5">
+        <div class="container text-center">
+            <img src="images/client-logos.png" alt="client logos" class="img-fluid">
+        </div>
+    </div> -->
+
+    <div class="section light-bg" id="features">
+
+
+        <div class="container">
+
+            <div class="section-title">
+                <!-- <small>HIGHLIGHTS</small> -->
+                <h3>Health Data</h3>
+            </div>
+
+            {% if information %}
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">Name</h4>
+                                    <p class="card-text">{{ information.FirstName.upper() + "   " + information.LastName.upper() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">BMI</h4>
+                                    <p class="card-text">{{ information.BMI }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">Number of Pregnancies</h4>
+                                    <p class="card-text">{{ information.Pregnancy }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px;">
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">Age</h4>
+                                    <p class="card-text">{{ information.Age }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% if more_info %}
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">Glucose level</h4>
+                                    <p class="card-text">{{ more_info['Glucose'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-lg-4">
+                    <div class="card features">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="ti-clip gradient-fill ti-3x mr-3"></span>
+                                <div class="media-body">
+                                    <h4 class="card-title">Blood pressure</h4>
+                                    <p class="card-text">{{ more_info['Blood Pressure'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- // end .section -->
+   
+    {% if prediction %}
+    <div class="section">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="images/medical-record.png" alt="medical record" class="img-fluid">
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <div>
+                        <!-- <div class="box-icon"><span class="ti-heart gradient-fill ti-3x"></span></div> -->
+                        <h2>Here is your report</h2>
+                        <p class="mb-4">From the health data in our database, {{ prediction }}</p>
+                        <!-- <a href="#" class="btn btn-primary">Read more</a></div> -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+    <!-- // end .section -->
+
+
+    <!-- // end .section -->
+    <footer class="my-5 text-center">
+        <!-- Copyright removal is not prohibited! -->
+        <p class="mb-2"><small>COPYRIGHT © 2021. ALL RIGHTS RESERVED. DEVELOPED BY AWAROME TECHNOLOGIES </small></p>
+
+        <!-- <small>
+            <a href="#" class="m-2">PRESS</a>
+            <a href="#" class="m-2">TERMS</a>
+            <a href="#" class="m-2">PRIVACY</a>
+        </small> -->
+    </footer>
+
+    <!-- jQuery and Bootstrap -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- Plugins JS -->
+    <script src="js/owl.carousel.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
