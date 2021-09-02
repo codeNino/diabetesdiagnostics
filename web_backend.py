@@ -55,6 +55,8 @@ def create_app():
     db.init_app(app)
 
 
+app = create_app()
+
 class User(db.Model):
 
     __tablename__ = 'patients_data'
@@ -137,11 +139,6 @@ admin.add_view(MyModelView(User, db.session))
 migrate = Migrate()
 migrate.init_app(app, db)
 
-
-
-#Initiate session
-sess = Session()
-sess.init_app(app)
 
 #load login manager
 
