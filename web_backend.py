@@ -52,7 +52,7 @@ def create_app():
     
     sess = Session()
     sess.init_app(app)
-    SqlAlchemySessionInterface(app, db, "session", "sess_")
+    #SqlAlchemySessionInterface(app, db, "session", "sess_")
 
     return app
 
