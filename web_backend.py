@@ -47,13 +47,14 @@ def create_app():
     
     app.config.from_object(__name__+'.ConfigClass')
 
+    db.init_app(app)
+
+    
     sess = Session()
     sess.init_app(app)
     SqlAlchemySessionInterface(app, db, "session", "sess_")
 
-
-    db.init_app(app)
-
+    return app
 
 app = create_app()
 
@@ -136,8 +137,8 @@ admin.add_view(MyModelView(User, db.session))
 
 
 
-migrate = Migrate()
-migrate.init_app(app, db)
+# migrate = Migrate()
+# migrate.init_app(app, db)
 
 
 #load login manager
