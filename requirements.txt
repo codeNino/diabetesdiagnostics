@@ -9,3 +9,5 @@ bcrypt
 Flask-Admin
 Joblib
 Numpy
+python-dotenv
+gunicorn

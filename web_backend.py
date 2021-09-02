@@ -4,76 +4,93 @@ import bcrypt, os
 import warnings, requests
 warnings.filterwarnings("ignore")
 from flask_login import login_required, LoginManager, logout_user,login_user
-from flask_session import Session
+from flask_session import Session, SqlAlchemySessionInterface
 from flask_migrate import Migrate
 from datetime import datetime
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 
+from os import environ, path
+from dotenv import load_dotenv
+
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
+
 
 class ConfigClass(object):
 
      
-    SECRET_KEY = 'hiahuwhqsj qk2uhu3ih29h232jid j 2iugu32gibdbi i2 dug ucn cewuui33 '
+    SECRET_KEY = environ.get('SECRET_KEY')
 
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:oluwanino7@localhost:5432/patients"
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    SESSION_TYPE = 'mongodb'
+    SESSION_TYPE = environ.get('SESSION_TYPE')
 
 
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
 
-    
+# Setup Flask-SQLALchemy
+db = SQLAlchemy()    
+
 # Setup Flask and load app.config
     
-app = Flask(__name__,
+def create_app():
+    
+    app = Flask(__name__,
             static_url_path='', 
             static_folder='static',
             template_folder='templates')
     
-app.config.from_object(__name__+'.ConfigClass')
+    app.config.from_object(__name__+'.ConfigClass')
 
-# Setup Flask-SQLALchemy
-db = SQLAlchemy()
-db.init_app(app)
-
-#admin = Admin(app)
+    sess = Session()
+    sess.init_app(app)
+    SqlAlchemySessionInterface(app, db, "session", "sess_")
 
 
+    db.init_app(app)
 
 
 class User(db.Model):
 
     __tablename__ = 'patients_data'
 
-    id_ = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    logdate = db.Column(db.DateTime, default= datetime.now())
+    Id_ = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    Created_On = db.Column(db.DateTime, default= datetime.now())
+    Last_Login = db.Column(db.DateTime, nullable=True)
+    Admin = db.Column(db.Boolean, default= False)
 
     #user auth info
-    Email = db.Column(db.String())
+    Email = db.Column(db.String(), unique=True)
 
     Password = db.Column(db.LargeBinary())
     #user personal info
     FirstName = db.Column(db.String())
     LastName = db.Column(db.String())
-    #user features
-    BMI = db.Column(db.Float())
+    #user health features
+    Height = db.Column(db.Flaot())
+    Weight = db.Column(db.FLoat())
+    BMI = db.Column(db.Float(), nullable=True)
     Pregnancy = db.Column(db.Integer())
     Age = db.Column(db.Integer())
+    Blood_Pressure = db.Column(db.Float, nullable=True)
+    Glucose_level = db.Column(db.Float, nullable=True)
 
-    def __init__(self, Email, Password, FirstName, LastName, BMI, Pregnancy, Age):
+    def __init__(self, Email, Password, FirstName, LastName, Height, Weight, BMI, Pregnancy, Age):
         self.Email = Email
         self.Password = Password
         self.FirstName = FirstName
         self.LastName = LastName
-        self.BMI = BMI
+        self.Height = Height
+        self.Weight = Weight
         self.Pregnancy = Pregnancy
         self.Age = Age
         self.authenticated = None
+        self.BMI = BMI
     
 
     def is_active(self):
@@ -97,7 +114,7 @@ class User(db.Model):
 class MyModelView(ModelView):
     def is_accessible(self):
         if "email" in session:
-            if session['email'] == 'lordnino7@gmail.com':
+            if session['email'] == environ.get('ADMIN_EMAIL'):
                 return True
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('landing_page'))
@@ -105,7 +122,7 @@ class MyModelView(ModelView):
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
         if "email" in session:
-            if session['email'] == 'lordnino7@gmail.com':
+            if session['email'] == environ.get('ADMIN_EMAIL'):
                 return True
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('landing_page'))
@@ -130,8 +147,6 @@ sess.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-
 
 
 @login_manager.user_loader
@@ -171,7 +186,7 @@ def login():
             email = data['email']
             pwd = data['pass']
             
-            if email == 'lordnino7@gmail.com' and pwd == 'holuwarnino':
+            if email == environ.get('ADMIN_EMAIL') and pwd == environ.get('ADMIN_PWD'):
                 session['email'] = email
                 return redirect('/admin')
 
@@ -185,9 +200,16 @@ def login():
                     login_user(existing_user, remember=True)
                     session['logged_in'] = True
                     session['email'] = existing_user.Email
+                    existing_user.Last_Login = datetime.now()
 
+                    db.session.commit()
 
-                    return redirect(url_for('home_page'))
+                    if existing_user.Admin == True:
+                        session['email'] = existing_user.Email
+                        return redirect('/admin')
+
+                    else:
+                        return redirect(url_for('home_page'))
                 else:
                     error = "! Invalid Password"
                     return render_template('signin.html', error = error)
@@ -222,7 +244,8 @@ def register():
             l_name = data['lastname']
             age = int(data['age'])
             preg = int(data['pregnancy'])
-            bmi = float(data['bmi'])
+            height = float(data['height'])
+            weight = float(data['weight'])
 
             existing_user = db.session.query(User).filter(User.Email == email).first()
 
@@ -232,7 +255,9 @@ def register():
                       Password= bcrypt.hashpw(passwd_1.encode('utf8'), bcrypt.gensalt()),
                           FirstName = f_name.upper(),
                                 LastName = l_name.upper(),
-                         BMI = bmi,
+                                Height = height,
+                                Weight = weight,
+                         BMI = weight/(height)**2,
                            Age = age,
                                Pregnancy = preg,
                              )
@@ -271,8 +296,8 @@ def home_page():
     age = user.Age
     pregnancy = user.Pregnancy
     bmi = user.BMI
-    bp = None
-    glucose = None
+    bp = user.Blood_Pressure
+    glucose = user.Glucose_Level
 
     data = {
               "Age": age,
@@ -282,7 +307,7 @@ def home_page():
               "Glucose": glucose
             }
 
-    response = requests.post(url="http://127.0.0.1:5002/detect", json= data)
+    response = requests.post(url="http://0.0.0.0:5002/detect", json= data)
 
     response = response.json()['pred']
 
@@ -303,7 +328,7 @@ def signout():
 
 def refresh():
     if request.method == "GET":
-        if request.args.get('type') == 'refreh':
+        if request.args.get('type') == 'refresh':
             return redirect(url_for('home_page'))
 
 
@@ -322,4 +347,4 @@ def logout():
 
 if __name__ == '__main__':
 
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
