@@ -72,9 +72,9 @@ class User(db.Model):
     FirstName = db.Column(db.String())
     LastName = db.Column(db.String())
     #user health features
-    Height = db.Column(db.Flaot())
-    Weight = db.Column(db.FLoat())
-    BMI = db.Column(db.Float(), nullable=True)
+    Height = db.Column(db.Float)
+    Weight = db.Column(db.Float)
+    BMI = db.Column(db.Float)
     Pregnancy = db.Column(db.Integer())
     Age = db.Column(db.Integer())
     Blood_Pressure = db.Column(db.Float, nullable=True)
@@ -257,7 +257,7 @@ def register():
                                 LastName = l_name.upper(),
                                 Height = height,
                                 Weight = weight,
-                         BMI = weight/(height)**2,
+                         BMI = weight/(height**2),
                            Age = age,
                                Pregnancy = preg,
                              )
@@ -316,15 +316,16 @@ def home_page():
 
 @app.route("/dashboard",methods = ['GET'])
 def signout():
+    
     if request.method == "GET":
 
-         if request.args.get('type') == 'sign out':
 
-            
-             logout_user()
-             session.clear()
+        if request.args.get('type') == 'sign out':
 
-             return redirect(url_for('landing_page'))
+            logout_user() 
+            session.clear()
+
+            return redirect(url_for('landing_page'))
 
 def refresh():
     if request.method == "GET":
