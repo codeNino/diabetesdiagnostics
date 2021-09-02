@@ -1,0 +1,1 @@
+web: gunicorn web_backend:app && flask run diabetes_predictor_FlaskAPI
