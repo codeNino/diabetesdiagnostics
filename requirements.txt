@@ -11,3 +11,4 @@ Joblib
 Numpy
 python-dotenv
 gunicorn
+requests
