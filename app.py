@@ -298,7 +298,7 @@ def home_page():
     pregnancy = user.Pregnancy
     bmi = user.BMI
     bp = user.Blood_Pressure
-    glucose = user.Glucose_Level
+    glucose = user.Glucose_level
 
     data = {
               "Age": age,
