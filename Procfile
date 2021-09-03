@@ -1,1 +1,1 @@
-web: gunicorn app:app && flask run diabetes_predictor_FlaskAPI.py
+web: gunicorn app:app && gunicorn diabetes_predictor_FlaskAPI:app
