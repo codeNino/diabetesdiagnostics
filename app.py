@@ -299,9 +299,9 @@ def home_page():
               "Glucose": glucose
             }
 
-    from diabetes_predictor_FlaskAPI import predictor
+    from diabetes_predictor_FlaskAPI import Predictor
 
-    reponse = predictor(data)
+    reponse = Predictor(data)
 
     response = response['pred']
 
