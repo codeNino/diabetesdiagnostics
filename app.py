@@ -301,9 +301,9 @@ def home_page():
 
     from diabetes_predictor_FlaskAPI import Predictor
 
-    reponse = Predictor(data)
+    result = Predictor(data)
 
-    response = response['pred']
+    response = result['pred']
 
     return render_template('index.html', information=user_info, more_info=data, prediction = response)
 
