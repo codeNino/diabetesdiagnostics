@@ -4,7 +4,7 @@ import bcrypt, os
 import warnings, requests
 warnings.filterwarnings("ignore")
 from flask_login import login_required, LoginManager, logout_user,login_user
-from flask_session import Session, SqlAlchemySessionInterface
+#from flask_session import Session, SqlAlchemySessionInterface
 from flask_migrate import Migrate
 from datetime import datetime
 from flask_admin import Admin, AdminIndexView
@@ -27,9 +27,9 @@ class ConfigClass(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    SESSION_TYPE = environ.get('SESSION_TYPE')
+    #SESSION_TYPE = environ.get('SESSION_TYPE')
 
-    SESSION_SQLALCHEMY = SQLAlchemy()
+    #SESSION_SQLALCHEMY = SQLAlchemy()
 
     FLASK_APP = 'app.py'
 
@@ -55,9 +55,8 @@ def create_app():
     db.init_app(app)
 
     
-    sess = Session()
-    sess.init_app(app)
-    #SqlAlchemySessionInterface(app, db, "sessions", "sess_")
+    # sess = Session()
+    # sess.init_app(app)
 
     return app
 
@@ -169,7 +168,7 @@ def login_required(func):
 @app.route('/')
 def landing_page():
     if "email" in session:
-        if session['email'] != 'lordnino7@gmail.com':
+        if session['email'] != environ.get('ADMIN_EMAIL'):
             return redirect(url_for('home_page'))
         else:
             return redirect('admin')
