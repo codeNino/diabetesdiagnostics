@@ -18,6 +18,8 @@ Flask-Security==3.0.0
 Flask-Session==0.4.0
 Flask-SQLAlchemy==2.5.1
 itsdangerous==2.0.1
+cython >= 0.28.5
+gunicorn
 jdcal==1.4.1
 jedi==0.14.1
 Jinja2==3.0.1
