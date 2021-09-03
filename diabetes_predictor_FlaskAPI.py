@@ -11,6 +11,7 @@ def Predictor(data):
 
     if data["Glucose"] is None and data["Blood Pressure"] is None:
 
+
         pregnancies = data['Pregnancy']
         bmi = data['BMI']
         age = data['Age']
@@ -26,6 +27,7 @@ def Predictor(data):
         confidence = model2.predict_proba(user_input.reshape(1,-1))[0]            
                 
             
+
         def prediction_output(pred=prediction, confidence=confidence):
     
             if pred == 0:
@@ -38,7 +40,7 @@ def Predictor(data):
 
                 
            
-            return  {'pred': prediction_output()}
+        return  {'pred': prediction_output()}
             
         
     else:
