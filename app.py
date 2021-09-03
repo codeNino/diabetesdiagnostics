@@ -4,7 +4,6 @@ import bcrypt, os
 import warnings, requests
 warnings.filterwarnings("ignore")
 from flask_login import login_required, LoginManager, logout_user,login_user
-#from flask_session import Session, SqlAlchemySessionInterface
 from flask_migrate import Migrate
 from datetime import datetime
 from flask_admin import Admin, AdminIndexView
@@ -26,10 +25,6 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    #SESSION_TYPE = environ.get('SESSION_TYPE')
-
-    #SESSION_SQLALCHEMY = SQLAlchemy()
 
     FLASK_APP = 'app.py'
 
@@ -53,10 +48,6 @@ def create_app():
     app.config.from_object(__name__+'.ConfigClass')
 
     db.init_app(app)
-
-    
-    # sess = Session()
-    # sess.init_app(app)
 
     return app
 
@@ -256,9 +247,9 @@ def register():
                       Password= bcrypt.hashpw(passwd_1.encode('utf8'), bcrypt.gensalt()),
                           FirstName = f_name.upper(),
                                 LastName = l_name.upper(),
-                                Height = height,
+                                Height = round(height, 2),
                                 Weight = weight,
-                         BMI = weight/(height**2),
+                         BMI = round(weight/(height**2),1),
                            Age = age,
                                Pregnancy = preg,
                              )
@@ -308,7 +299,7 @@ def home_page():
               "Glucose": glucose
             }
 
-    response = requests.post(url="http://0.0.0.0:5002/detect", json= data)
+    response = requests.post(url="http://127.0.0.1:5002/detect", json= data)
 
     response = response.json()['pred']
 
@@ -349,4 +340,4 @@ def logout():
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='127.0.0.1', port=5000)
