@@ -299,9 +299,11 @@ def home_page():
               "Glucose": glucose
             }
 
-    response = requests.post(url="http://127.0.0.1:5002/detect", json= data)
+    from diabetes_predictor_FlaskAPI import predictor
 
-    response = response.json()['pred']
+    reponse = predictor(data)
+
+    response = response['pred']
 
     return render_template('index.html', information=user_info, more_info=data, prediction = response)
 
