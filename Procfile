@@ -1,1 +1,2 @@
-web: gunicorn app:app && gunicorn diabetes_predictor_FlaskAPI:app
+web: gunicorn app:app 
+web: gunicorn diabetes_predictor_FlaskAPI:app
