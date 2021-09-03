@@ -4,7 +4,6 @@ alabaster==0.7.12
 alembic==1.0.9
 Flask==2.0.1
 bcrypt
-os
 Flask-Admin==1.5.8
 Flask-BabelEx==0.9.4
 Flask-Compress==1.9.0
